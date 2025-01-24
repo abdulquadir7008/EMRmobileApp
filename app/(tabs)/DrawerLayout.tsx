@@ -11,6 +11,7 @@ import paymentSucess from './paymentSucess';
 import orderList from './orderList';
 import wallet from './wallet';
 import profile from './profile';
+import editProfile from './editProfile';
 
 const Drawer = createDrawerNavigator();
 
@@ -76,6 +77,11 @@ export default function DrawerLayout() {
         name="profile"
         component={profile}
         options={{ title: 'Profile' }}
+      />
+      <Drawer.Screen
+        name="editProfile"
+        component={editProfile}
+        options={{ title: 'Edit Profile' }}
       />
 
 

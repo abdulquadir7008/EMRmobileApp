@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, TextInput, View, TouchableOpacity, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -23,8 +24,14 @@ export default function LoginScreen() {
       const data = await response.json();
 
       if (response.ok) {
+        const user = data.user;
+        const author = data.auth;
         Alert.alert('Success', 'Login successful!');
-        navigation.navigate('shopScreen'); // Navigate to the shop screen
+        navigation.navigate('shopScreen');
+        
+        await AsyncStorage.setItem('profile', JSON.stringify(user));
+        await AsyncStorage.setItem('authortoken', JSON.stringify(author));
+        
       } else {
         Alert.alert('Error', data.message || 'Login failed. Please try again.');
       }

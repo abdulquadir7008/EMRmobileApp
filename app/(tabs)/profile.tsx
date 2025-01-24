@@ -1,12 +1,39 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, LayoutAnimation, Image } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, LayoutAnimation, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Footer from './include/footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function profile() {
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await AsyncStorage.getItem('profile'); // Replace 'userData' with your key
+        if (data) {
+          setUserData(JSON.parse(data)); // Parse the stringified data
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('profile'); // Clear user data
+      Alert.alert('Logout', 'You have been logged out.');
+      navigation.navigate('index'); // Navigate to login screen
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   const AccordionItem = ({ title, screens, navigation }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -73,12 +100,13 @@ export default function profile() {
       </View>
       <ScrollView>
         <View style={styles.formContainer}>
-          <Image
+          {<Image
             source={require('@/assets/images/AbdulQuadir Photo.jpeg')}
             style={styles.HeadingImg}
-          />
-          <Text style={styles.profText}>Abdul Quadir</Text>
-          <Text style={styles.profText2}>UserID: emr00308</Text>
+          /> }
+          <Text style={styles.profText}>{userData?.fname && userData?.lname ? `${userData.fname} ${userData.lname}` : 'Guest User'}</Text>
+          <Text style={styles.profText2}>UserID: {userData?.userid ? ` ${userData.userid}` : 'Guest User'}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('editProfile')}><Text>Edit</Text></TouchableOpacity>
         </View>
         <View style={styles.AcoordContainer}>
           <AccordionItem
@@ -202,6 +230,9 @@ export default function profile() {
           />
 
         </View>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </ScrollView>
       <Footer />
     </View >
@@ -304,5 +335,16 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: '#000',
+  },
+  logoutButton: {
+    backgroundColor: '#f00',
+    padding: 10,
+    margin: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

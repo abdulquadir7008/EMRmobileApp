@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, View, TextInput, TouchableOpacity, TouchableHighlight, Text, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Import Picker for dropdowns
 import { useNavigation } from '@react-navigation/native';
@@ -6,10 +6,32 @@ import { Ionicons } from '@expo/vector-icons'; // Ensure you have installed @exp
 import styles from './CSS/shopScreenStyles';
 import BannerSlider from './include/BannerSlider';
 import Footer from './include/footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function shopScreen() {
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+  const [userAuth, setAuthData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('profile');
+        if (userData) {
+          setUserData(JSON.parse(userData));
+        }
+        const authData = await AsyncStorage.getItem('authortoken');
+        if (authData) {
+          setAuthData(JSON.parse(authData));
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   /*Dumy Code Start*/
   const [searchText, setSearchText] = useState('');
@@ -20,10 +42,10 @@ export default function shopScreen() {
     Alert.alert('Button Pressed!');
   };
   const products = [
-    { id: '1', name: 'Casual Shirt',slogan: 'Slim fit casual shirt', price: '$30', image: require('@/assets/images/products/1.jpeg') },
-    { id: '2', name: 'Striped T-Shirt',slogan: 'Slim fit casual shirt', price: '$25', image: require('@/assets/images/products/2.jpeg') },
-    { id: '3', name: 'Jeans',slogan: 'Slim fit casual shirt', price: '$40', image: require('@/assets/images/products/3.jpeg') },
-    { id: '4', name: 'Jeans',slogan: 'Slim fit casual shirt', price: '$40', image: require('@/assets/images/products/1.jpeg') },
+    { id: '1', name: 'Casual Shirt', slogan: 'Slim fit casual shirt', price: '$30', image: require('@/assets/images/products/1.jpeg') },
+    { id: '2', name: 'Striped T-Shirt', slogan: 'Slim fit casual shirt', price: '$25', image: require('@/assets/images/products/2.jpeg') },
+    { id: '3', name: 'Jeans', slogan: 'Slim fit casual shirt', price: '$40', image: require('@/assets/images/products/3.jpeg') },
+    { id: '4', name: 'Jeans', slogan: 'Slim fit casual shirt', price: '$40', image: require('@/assets/images/products/1.jpeg') },
   ];
 
 
@@ -34,15 +56,7 @@ export default function shopScreen() {
     <View style={styles.container}>
 
       <View style={styles.header}>
-
-        {/* <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity> */}
-
-
         <Text style={styles.title}>Home</Text>
-
-
         <View style={styles.logoContainer}>
           <Image
             source={require('@/assets/images/emr-cover.jpg')}
@@ -55,10 +69,10 @@ export default function shopScreen() {
       <ScrollView contentContainerStyle={styles.formContainer}>
         <View style={styles.userInfo}>
           <View style={styles.profilePic}>
-            <Image source={require('@/assets/images/AbdulQuadir Photo.jpeg')} style={styles.profilePhoto} />
+            {/* <Image source={require('@/assets/images/AbdulQuadir Photo.jpeg')} style={styles.profilePhoto} /> */}
             <View>
               <Text style={styles.helloSay}>Good Morning!</Text>
-              <Text style={styles.fullName}>Abdul Quadir</Text>
+              <Text style={styles.fullName}>{userData?.fname && userData?.lname ? `${userData.fname} ${userData.lname}` : 'Guest User'}</Text>
             </View>
           </View>
           <View style={styles.notification}>
@@ -70,19 +84,19 @@ export default function shopScreen() {
           <View style={styles.categgoryButton}>
             <TouchableOpacity style={styles.catButton}>
               <View style={{ marginTop: 0, marginRight: 4 }}>
-              <Image source={require('@/assets/images/men.png')} style={{width:15, height:25}} />
+                <Image source={require('@/assets/images/men.png')} style={{ width: 15, height: 25 }} />
               </View>
               <Text style={styles.catText}>Men</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.catButton}>
-            <View style={{ marginTop: 1, marginRight: 2 }}>
-            <Image source={require('@/assets/images/women.png')} style={{width:15, height:25}} />
+              <View style={{ marginTop: 1, marginRight: 2 }}>
+                <Image source={require('@/assets/images/women.png')} style={{ width: 15, height: 25 }} />
               </View>
               <Text style={styles.catText}>Women</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.catButton}>
-            <View style={{ marginTop: 1, marginRight: 2 }}>
-            <Image source={require('@/assets/images/kids.png')} style={{width:15, height:25}} />
+              <View style={{ marginTop: 1, marginRight: 2 }}>
+                <Image source={require('@/assets/images/kids.png')} style={{ width: 15, height: 25 }} />
               </View>
               <Text style={styles.catText}>Kids</Text>
             </TouchableOpacity>

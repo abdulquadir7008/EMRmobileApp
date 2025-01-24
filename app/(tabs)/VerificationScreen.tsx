@@ -30,7 +30,7 @@ const VerificationScreen = () => {
   const handleVerify = async () => {
     if (code.length === 6) {
       try {
-        console.log('Starting Axios request...');
+        // console.log('Starting Axios request...');
         const response = await axios.post('https://emrmarketingapi.vercel.app/verify', {
           sessionId: sessionId,
           passcode: code,
@@ -45,7 +45,7 @@ const VerificationScreen = () => {
           Alert.alert('Error', result.result || 'Verification failed.');
         }
       } catch (error) {
-        console.error('Error verifying code:', error);
+        // console.error('Error verifying code:', error);
         if (error.response) {
           Alert.alert('Error', error.response.data.result || 'Verification failed.');
         } else if (error.request) {

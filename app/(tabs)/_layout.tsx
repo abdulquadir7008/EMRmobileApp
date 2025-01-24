@@ -31,6 +31,13 @@ export default function TabLayout() {
 
         }}
       />
+      <Tabs.Screen
+        name="ResetPasswordScreen"
+        options={{
+          title: 'Resset Password', tabBarStyle: { display: 'none' },
+
+        }}
+      />
 
       <Tabs.Screen
         name="signupScreen"
@@ -95,6 +102,13 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'profile', tabBarStyle: { display: 'none' },
+
+        }}
+      />
+      <Tabs.Screen
+        name="editProfile"
+        options={{
+          title: 'editProfile', tabBarStyle: { display: 'none' },
 
         }}
       />
