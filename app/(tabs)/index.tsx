@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
@@ -13,7 +14,7 @@ export default function LoginScreen() {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
-
+    setLoading(true);
     try {
       const response = await fetch('https://emrmarketingapi.vercel.app/login', {
         method: 'POST',
@@ -26,6 +27,7 @@ export default function LoginScreen() {
       if (response.ok) {
         const user = data.user;
         const author = data.auth;
+        setLoading(false);
         Alert.alert('Success', 'Login successful!');
         navigation.navigate('shopScreen');
         
@@ -33,9 +35,11 @@ export default function LoginScreen() {
         await AsyncStorage.setItem('authortoken', JSON.stringify(author));
         
       } else {
+        setLoading(false);
         Alert.alert('Error', data.message || 'Login failed. Please try again.');
       }
     } catch (error) {
+      setLoading(false);
       Alert.alert('Error', 'An error occurred. Please try again.');
       console.error('Login error:', error);
     }
@@ -43,34 +47,45 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('@/assets/images/emr-cover.jpg')}
-        style={styles.logo}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Username or Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <View style={styles.linksContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-        <Text style={styles.link}>Forgot Password?</Text>
-      </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('signupScreen')}>
-          <Text style={styles.link}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      {loading && (
+        <Image
+          source={require('@/assets/images/load.gif')} // Ensure the path is correct
+          style={styles.loadingGif}
+        />
+      )}
+      {!loading && (
+        <>
+          <Image
+            source={require('@/assets/images/emr-cover.jpg')}
+            style={styles.logo}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Username or Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+         
+          <View style={styles.linksContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+              <Text style={styles.link}>Forgot Password?</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('signupScreen')}>
+              <Text style={styles.link}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -118,5 +133,9 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontSize: 14,
     fontFamily:'SpaceMonobold',
+  },
+  loadingGif: {
+    width: 100,
+    height: 100,
   },
 });

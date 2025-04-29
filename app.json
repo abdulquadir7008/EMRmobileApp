@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.quadir7008.EMR"
+      "bundleIdentifier": "com.quadir7008.EMR",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -42,6 +45,7 @@
       "eas": {
         "projectId": "53def9ad-d309-4ccd-a713-8ec4f5e82aba"
       }
-    }
+    },
+    "owner": "quadir7008"
   }
 }

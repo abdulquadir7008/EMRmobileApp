@@ -126,7 +126,7 @@ export default function orderList() {
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}
           // onPress={() => navigation.goBack()}
-          onPress={() => navigation.navigate('addToCart')}>
+          onPress={() => navigation.navigate('profile')}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
 

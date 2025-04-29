@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    marginTop: 20,
-    paddingBottom: 5
+    marginTop: 0,
+    paddingBottom: 2
   },
   title: {
     fontSize: 20,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 70,
     height: 30,
-    marginTop: 10
+    marginTop: 0
   },
   formContainer: {
     width: '100%',
@@ -47,18 +47,17 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     backgroundColor:'#0172fe',
     elevation:2,
-    padding:5, borderRadius:10,
+    padding:5, 
+    marginTop:0,
   },
   profilePic:{
     flexDirection:'row',
     alignItems:'flex-start',
-    
- 
   },
   notification:{
     alignItems:'flex-end',
     flexDirection:'row',
-    height:32, marginRight:10
+    height:32, marginRight:0
   },
   profilePhoto:{
     width:40,
@@ -67,11 +66,12 @@ const styles = StyleSheet.create({
     borderWidth:2, borderColor:'#fff'
   },
   helloSay:{
-    fontSize:14,
+    fontSize:12,
     color:'#fff',
     marginLeft:10,
-    lineHeight:17,
-    fontFamily: 'SpaceMono', marginTop:3,
+    lineHeight:12,
+    fontFamily: 'SpaceMono', 
+    marginTop:3,
   },
   fullName:{
     fontSize:14,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SpaceMonobold',
   },
   icon: {
-    marginLeft: 15, // Adjust this value for spacing between the icons
+    marginLeft: 10, // Adjust this value for spacing between the icons
   },
   searchContainer: {
     flexDirection: 'row',
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginTop: 5,
+    margin: 5,
   },
   searchIcon: {
     marginRight: 8,
@@ -105,10 +105,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   touchContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
-    marginTop:15
+    marginTop:5
   },
   categoryButton: {
     padding: 7,
@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
     fontFamily:'SpaceMonobold',
   },
   popularCatgory:{
-    fontSize:18,
+    fontSize:14,
     fontFamily:'SpaceMonobold',
     textAlign:'left',
-    marginBottom:10
+    marginBottom:10,
+    marginLeft:10
   },
   productCard: {
     width: '47.5%', // Each card takes 50% of the row
@@ -186,7 +187,26 @@ const styles = StyleSheet.create({
   },
   catText:{
     color:'#6b6b6b',fontFamily:'SpaceMonobold', marginTop:4
-
+  },
+  dropdownContainer: {
+    position: 'absolute',
+    top: 50,
+    left: 10,
+    right: 10,
+    backgroundColor: '#fff',
+    zIndex: 1,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    maxHeight: 200,
+  },
+  dropdownItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
   
   

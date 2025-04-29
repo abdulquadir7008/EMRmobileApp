@@ -1,29 +1,56 @@
 import React, { useState } from 'react';
 import { Image, View, Button, TouchableOpacity, Text, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import Swiper from 'react-native-swiper';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import Footer from './include/footer';
-
+import { WebView } from 'react-native-webview';
+import { useDispatch } from 'react-redux';
+import { addToCart } from './store/cartSlice';
 
 export default function productDetails() {
   const navigation = useNavigation();
-  const banners = [
-    { id: 1, imageUrl: require('@/assets/images/products/1.jpeg') },
-    { id: 2, imageUrl: require('@/assets/images/products/2.jpeg') },
-    { id: 3, imageUrl: require('@/assets/images/products/3.jpeg') },
-    { id: 4, imageUrl: require('@/assets/images/products/1.jpeg') },
-  ];
+  const route = useRoute();
+  const { product } = route.params || {};
+  const dispatch = useDispatch();
+
+  const imageArray = product.image.split(',').filter(image => image);
+  const banners = imageArray.map((imageUrl, index) => ({
+    id: index + 1,
+    imageUrl: { uri: `https://www.emrmarketing.in/uploads/product/${imageUrl}` },
+  }));
+
+  const sizeArray = product && product.Variant && product.Variant.vlist ? product.Variant.vlist.split(',').filter(vlist => vlist) : [];
+const sizes = sizeArray.length > 0 ? sizeArray.map((sizeList) => ({
+  sg: sizeList
+})) : [];
+
+const colorArray = product && product.color && product.color ? product.color.split(',').filter(color => color) : [];
+const colors = colorArray.length > 0 ? colorArray.map((colorList) => ({
+  cl: colorList
+})) : [];
 
   const [selectedSize, setSelectedSize] = useState('M'); // Default size
   const [selectedColor, setSelectedColor] = useState('Red'); // Default color
   const [quantity, setQuantity] = useState(1);
-  const pricePerItem = 20000;
 
+  const pricePerItem = product.sprice ? product.sprice : product.price;
   const totalPrice = quantity * pricePerItem;
 
-  const addToCart = () => {
-    alert(`Added ${quantity} item(s) of size ${selectedSize} and color ${selectedColor} to cart. Total: $${totalPrice}`);
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: product.id,
+      name: product.title,
+      price: pricePerItem,
+      quantity,
+      image: `https://www.emrmarketing.in/uploads/product/${product.image2}`,
+      selectedColor,
+      selectedSize,
+    };
+  
+    dispatch(addToCart(cartItem));
+    alert('Product added to cart!');
   };
 
   const increaseQuantity = () => setQuantity(quantity + 1);
@@ -32,16 +59,34 @@ export default function productDetails() {
       setQuantity(quantity - 1);
     }
   };
-  // Predefined sizes and colors
-  const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-  const colors = [
-    { label: 'Red', value: 'Red', colorCode: '#FF0000' },
-    { label: 'Blue', value: 'Blue', colorCode: '#0000FF' },
-    { label: 'Green', value: 'Green', colorCode: '#00FF00' },
-    { label: 'Yellow', value: 'Yello', colorCode: '#FF0000' },
-    { label: 'Oreange', value: 'Oreange', colorCode: '#0000FF' }
-  ];
 
+  const renderDescription = () => {
+    if (product && product.description) {
+      const htmlContent = `
+        <html>
+        <head>
+          <style>
+            body {
+              font-size: 35px;
+            }
+          </style>
+        </head>
+        <body>
+          ${String(product.description)}
+        </body>
+        </html>
+      `;
+      return (
+        <WebView
+          originWhitelist={['*']}
+          source={{ html: htmlContent }}
+          style={{ height: 50 }}
+        />
+      );
+    } else {
+      return <Text>No description available.</Text>;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -67,23 +112,36 @@ export default function productDetails() {
       {/* Form Section */}
       <ScrollView contentContainerStyle={styles.formContainer}>
         <View style={styles.ProductImages}>
-          <Swiper
-            autoplay
-            loop
-            showsPagination
-            dotStyle={styles.dot}
-            activeDotStyle={styles.activeDot}
+          <SwiperFlatList
+            autoplay={true}
+            autoplayDelay={3}
+            autoplayLoop={false}
+            showsPagination={true}
+            paginationStyleItem={styles.dot}
+            paginationStyleItemActive={styles.activeDot}
           >
+            <View key='0' style={styles.bannerContainer}>
+              <Image
+                source={{ uri: `https://www.emrmarketing.in/uploads/product/${product.image2}` }}
+                style={styles.bannerImage}
+                resizeMode="cover"
+              />
+            </View>
             {banners.map((banner) => (
               <View key={banner.id} style={styles.bannerContainer}>
-                <Image source={banner.imageUrl} style={styles.bannerImage} />
+                <Image
+                  source={banner.imageUrl}
+                  style={styles.bannerImage}
+                  resizeMode="cover"
+                />
               </View>
             ))}
-          </Swiper>
+          </SwiperFlatList>
+
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 10 }}>
           <View style={{ alignItems: 'flex-start' }}>
-            <Text style={{ fontFamily: 'SpaceMonobold', fontSize: 20 }}>Venesa Long Shirt</Text>
+            <Text style={{ fontFamily: 'SpaceMonobold', fontSize: 20 }}>{product.title}</Text>
           </View>
           <View style={{ alignContent: 'flex-end' }}>
             <Ionicons name="heart-outline" size={24} color="black" />
@@ -91,44 +149,45 @@ export default function productDetails() {
         </View>
         <View style={{ width: '100%', marginTop: 10 }}>
           <Text style={{ fontFamily: 'SpaceMonobold', fontSize: 17, marginBottom: 5 }}>Description</Text>
-          <Text style={{ fontFamily: 'SpaceMono', fontSize: 14, color: '#212121' }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-            
-          </Text>
+          {renderDescription()}
+
         </View>
 
         <View style={styles.productIntru}>
           {/* Size Selection */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', }}>
-            <View style={{ width: '50%' }}>
-              <Text style={styles.label}>Size:</Text>
-              <View style={styles.radioGroup}>
-                {sizes.map((size) => (
-                  <TouchableOpacity
-                    key={size}
-                    style={[
-                      styles.radioButton,
-                      selectedSize === size && styles.radioSelected
-                    ]}
-                    onPress={() => setSelectedSize(size)}
-                  >
-                    <Text style={styles.radioText}>{size}</Text>
-                  </TouchableOpacity>
-                ))}
+            {sizes && sizes.length > 0 && (
+              <View style={{ width: '50%' }}>
+                <Text style={styles.label}>Size:</Text>
+                <View style={styles.radioGroup}>
+                  {sizes.map((size) => (
+                    <TouchableOpacity
+                      key={size.sg}
+                      style={[
+                        styles.radioButton,
+                        selectedSize === size.sg && styles.radioSelected
+                      ]}
+                      onPress={() => setSelectedSize(size.sg)}
+                    >
+                      <Text style={styles.radioText}>{size.sg}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
+
             <View style={{ width: '50%' }}>
               <Text style={styles.label}>Color:</Text>
               <View style={styles.radioGroup}>
                 {colors.map((color) => (
                   <TouchableOpacity
-                    key={color.value}
+                    key={color.cl}
                     style={[
                       styles.colorRadioButton,
-                      { backgroundColor: color.colorCode },
-                      selectedColor === color.value && styles.radioSelected
+                      { backgroundColor: color.cl },
+                      selectedColor === color.cl && styles.radioSelected
                     ]}
-                    onPress={() => setSelectedColor(color.value)}
+                    onPress={() => setSelectedColor(color.cl)}
                   />
                 ))}
               </View>
@@ -154,13 +213,20 @@ export default function productDetails() {
             </View>
             <View>
               <Text style={styles.label}>Total Price:</Text>
-              <Text style={styles.totalPrice}>${totalPrice}</Text>
+
+              <View style={styles.priceContainer}>
+                {product.sprice && (
+                  <Text style={[styles.totalPrice, styles.regularPrice]}>{product.price}</Text>
+                )}
+                <Text style={styles.specialPrice}>₹{parseFloat(totalPrice).toFixed(2)}</Text>
+              </View>
+
             </View>
             <View>
-              <TouchableOpacity style={styles.addToCartButton} onPress={() => navigation.navigate('addToCart')}>
-              <Ionicons name="cart-outline" size={17} color="white" /> 
-                <Text style={styles.addToCartText}> Add to Cart</Text>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+  <Ionicons name="cart-outline" size={17} color="white" />
+  <Text style={styles.addToCartText}> Add to Cart</Text>
+</TouchableOpacity>
             </View>
           </View>
 
@@ -226,8 +292,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bannerImage: {
-    width: '100%',
-    height: 300,
+    width: 364,
+    height: 400,
     borderRadius: 5
   },
   dot: {
@@ -318,13 +384,30 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     marginVertical: 10,
-    padding:20,
-    marginTop:15,
-    flexDirection:'row'
+    padding: 20,
+    marginTop: 15,
+    flexDirection: 'row'
   },
   addToCartText: {
     color: '#fff', // White text
     fontSize: 15,
     fontWeight: 'bold',
   },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  regularPrice: {
+    textDecorationLine: 'line-through',
+    marginRight: 10,
+    color: 'gray',
+    fontSize: 15
+  },
+  specialPrice: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 20
+
+  }
+
 });

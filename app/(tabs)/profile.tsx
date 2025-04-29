@@ -81,11 +81,11 @@ export default function profile() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}
+        {/* <TouchableOpacity style={styles.backButton}
           // onPress={() => navigation.goBack()}
           onPress={() => navigation.navigate('addToCart')}>
           <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Title */}
         <Text style={styles.title}>Profile</Text>
@@ -113,9 +113,9 @@ export default function profile() {
             title="Binary"
             screens={[
               { text: 'Tree', route: 'addToCart' },
-              { text: 'Left Binary Team', route: 'order' },
-              { text: 'Right Binary Team', route: 'checkout' },
-              { text: 'Binary Income', route: 'checkout' }
+              { text: 'Left Binary Team', route: 'Income/leftBinaryTeam' },
+              { text: 'Right Binary Team', route: 'Income/rightBinaryTeam' },
+              { text: 'Binary Income', route: 'Income/binaryHistory' }
             ]}
             navigation={navigation}
           />
@@ -123,9 +123,9 @@ export default function profile() {
           <AccordionItem
             title="Robotic"
             screens={[
-              { text: 'Robotic Income', route: 'addToCart' },
-              { text: 'Robotic Wallet', route: 'order' },
-              { text: 'Robotic Team', route: 'checkout' }
+              { text: 'Robotic Income', route: 'Income/roboticIncome' },
+              { text: 'Robotic Wallet', route: 'Income/roboticWallet' },
+              { text: 'Robotic Team', route: 'Income/poolTeam' }
             ]}
             navigation={navigation}
           />
@@ -133,44 +133,43 @@ export default function profile() {
           <AccordionItem
             title="Pool 2"
             screens={[
-              { text: 'Pool Team', route: 'addToCart' },
-              { text: 'Pool Income', route: 'order' },
-              { text: 'Pool Level Income', route: 'checkout' },
-              { text: 'Global Pool Carier Income', route: 'checkout' }
+              { text: 'Pool Team', route: 'pooltwo/pooltwoTeam' },
+              { text: 'Pool Income', route: 'pooltwo/selfPoolHistory' },
+              { text: 'Pool Level Income', route: 'pooltwo/pooLvelHistory' },
+              { text: 'Global Pool Carier Income', route: 'pooltwo/globalPool' }
             ]}
             navigation={navigation}
           />
 
           <AccordionItem
-            title="Booster"
+            title="Booster 1"
             screens={[
-              { text: 'Booster 1 (B1) Team', route: 'addToCart' },
-              { text: 'Booster 1 (B2) Team', route: 'order' },
-              { text: 'Booster 1 (B3) Team', route: 'checkout' },
-              { text: 'Booster 1 (B4) Team', route: 'checkout' },
-              { text: 'Booster 1 (B5) Team', route: 'checkout' },
-              { text: 'Booster 1 (B6) Team', route: 'checkout' },
-              { text: 'Booster 1 Income', route: 'checkout' },
-              { text: 'Booster 1 Level Income', route: 'checkout' }
+              { text: 'Booster 1 (B1) Team', route: 'booster/boosterOneHistory' },
+              { text: 'Booster 1 (B2) Team', route: 'booster/boosterTwoHistory' },
+              { text: 'Booster 1 (B3) Team', route: 'booster/boosterThreeHistory' },
+              { text: 'Booster 1 (B4) Team', route: 'booster/boosterFourHistory' },
+              { text: 'Booster 1 (B5) Team', route: 'booster/boosterFiveHistory' },
+              { text: 'Booster 1 (B6) Team', route: 'booster/boosterSixHistory' },
+              { text: 'Booster 1 Income', route: 'booster/boosterOneIncome' },
+              { text: 'Booster 1 Level Income', route: 'booster/boosterOneLevelIncome' }
             ]}
             navigation={navigation}
           />
 
           <AccordionItem
-            title="Booster"
+            title="Booster 2"
             screens={[
-              { text: 'Booster 1 (B1) Team', route: 'addToCart' },
-              { text: 'Booster 1 (B2) Team', route: 'order' },
-              { text: 'Booster 1 (B3) Team', route: 'checkout' },
-              { text: 'Booster 1 (B4) Team', route: 'checkout' },
-              { text: 'Booster 1 (B5) Team', route: 'checkout' },
-              { text: 'Booster 1 (B6) Team', route: 'checkout' },
-              { text: 'Booster 1 Income', route: 'checkout' },
-              { text: 'Booster 2 Team', route: 'checkout' },
-              { text: 'Booster 2 Income', route: 'checkout' },
-              { text: 'Booster 3 Team', route: 'checkout' },
-              { text: 'Booster 2 Income', route: 'checkout' },
-              { text: 'Booster 3 Income', route: 'checkout' },
+              { text: 'Booster 2 Team', route: 'booster/boosterbTwoHistory' },
+              { text: 'Booster 2 Income', route: 'booster/boostertwoIncome' }
+
+            ]}
+            navigation={navigation}
+          />
+          <AccordionItem
+            title="Booster 3"
+            screens={[
+              { text: 'Booster 3 Team', route: 'booster/boosterbThreeHistory' },
+              { text: 'Booster 3 Income', route: 'booster/boosterThreeIncome' }
 
             ]}
             navigation={navigation}
@@ -179,9 +178,9 @@ export default function profile() {
           <AccordionItem
             title="Other Income"
             screens={[
-              { text: 'Sponsor Income', route: 'addToCart' },
-              { text: 'Repurchase Income', route: 'order' },
-              { text: 'Ad View Income', route: 'checkout' }
+              { text: 'Sponsor Income', route: 'otherIncome/sponserIncome' },
+              { text: 'Repurchase Income', route: 'otherIncome/repurchaseIncome' },
+              { text: 'Ad View Income', route: 'otherIncome/adViewIncome' }
             ]}
             navigation={navigation}
           />
@@ -189,8 +188,8 @@ export default function profile() {
           <AccordionItem
             title="Rank Income"
             screens={[
-              { text: 'Rank Club Income', route: 'addToCart' },
-              { text: 'Rank Club Royalty Income', route: 'order' }
+              { text: 'Rank Club Income', route: 'rankclub/rankClubIncome' },
+              { text: 'Rank Club Royalty Income', route: 'rankclub/rankClubRoyal' }
             ]}
             navigation={navigation}
           />
@@ -198,8 +197,8 @@ export default function profile() {
           <AccordionItem
             title="Code Team"
             screens={[
-              { text: 'Enter Code', route: 'addToCart' },
-              { text: 'Code Income', route: 'order' }
+              { text: 'Enter Code', route: 'codeIncome/enterCode' },
+              { text: 'Code Income', route: 'codeIncome/codeIncomeHistory' }
             ]}
             navigation={navigation}
           />
@@ -207,7 +206,7 @@ export default function profile() {
           <AccordionItem
             title="Wallet"
             screens={[
-              { text: 'Pool 2 Wallet', route: 'addToCart' },
+              { text: 'Pool 2 Wallet', route: 'wallet/poolTwoWallet' },
               { text: 'Booster 1 Wallet', route: 'order' },
               { text: 'Booster 2 Wallet', route: 'order' },
               { text: 'Booster 3 Wallet', route: 'order' }
